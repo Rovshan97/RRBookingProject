@@ -7,11 +7,11 @@ load_dotenv()
 
 class ApiClient:
     def __init__(self):
-        environment.str = os.getenv("ENVIRONMENT")
+        environment = os.getenv('ENVIRONMENT')
         try:
-            environment = Environment[environment.str]
+            environment = Environment[environment]
         except KeyError:
-            raise ValueError(f"Unsupported environment: {environment.str}")
+            raise ValueError(f"Unsupported environment: {environment}")
 
         self.base_url = self.get_base_url(environment)
         self.headers = {
@@ -20,9 +20,9 @@ class ApiClient:
 
     def get_base_url(self, environment: Environment) -> str:
         if environment == Environment.TEST:
-            return os.getenv("TEST_BASE_URL")
+            return os.getenv('TEST_BASE_URL')
         elif environment == Environment.PROD:
-            return os.getenv("PROD_BASE_URL")
+            return os.getenv('PROD_BASE_URL')
         else:
             raise ValueError(f"Unsupported environment: {environment}")
 
