@@ -3,8 +3,7 @@ import os
 import allure
 
 from dotenv import load_dotenv
-from core.settings.conftest import create_booking
-from core.settings.environments import Environment
+from core.settings.environments import Environments
 from core.settings.config import Users, Timeouts
 from core.clients.endpoints import Endpoints
 
@@ -15,7 +14,7 @@ class ApiClient:
     def __init__(self):
         environment = os.getenv('ENVIRONMENT')
         try:
-            environment = Environment[environment]
+            environment = Environments[environment]
         except KeyError:
             raise ValueError(f"Unsupported environment: {environment}")
 
@@ -25,10 +24,10 @@ class ApiClient:
             'Content-Type': 'application/json'
         }
 
-    def get_base_url(self, environment: Environment) -> str:
-        if environment == Environment.TEST:
+    def get_base_url(self, environment: Environments) -> str:
+        if environment == Environments.TEST:
             return os.getenv('TEST_BASE_URL')
-        elif environment == Environment.PROD:
+        elif environment == Environments.PROD:
             return os.getenv('PROD_BASE_URL')
         else:
             raise ValueError(f"Unsupported environment: {environment}")
@@ -70,11 +69,10 @@ class ApiClient:
 
     @allure.title("Получение информации о бронировании по ID")
     def get_booking_by_id(self, booking_id):
-        with allure.step('Get booking by id'):
-            booking_id = create_booking["id"]
         with allure.step("Отправка запроса на получение информации о бронировании по ID"):
-            response = requests.get(url=f"{'TEST_BASE_URL'}/booking/{booking_id}")
+            response = requests.get(url=f"{'self.base_url'}/booking/{booking_id}")
 
         with allure.step("Проверка статуса ответа и данных питомца"):
             assert response.status_code == 200
             assert response.json()["id"] == booking_id
+        return response.json()
