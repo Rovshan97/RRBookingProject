@@ -70,7 +70,7 @@ class ApiClient:
     @allure.title("Получение информации о бронировании по ID")
     def get_booking_by_id(self, booking_id):
         with allure.step("Отправка запроса на получение информации о бронировании по ID"):
-            response = requests.get(url=f"{'self.base_url'}/booking/{booking_id}")
+            response = requests.get(url=f"{self.base_url}/booking/{booking_id}")
 
         with allure.step("Проверка статуса ответа и данных питомца"):
             assert response.status_code == 200
