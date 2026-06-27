@@ -11,7 +11,7 @@ from requests.auth import HTTPBasicAuth
 load_dotenv()
 
 
-class ApiClient:
+class APIClient:
     def __init__(self):
         environment = os.getenv('ENVIRONMENT')
         try:
